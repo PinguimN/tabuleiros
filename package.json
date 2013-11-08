@@ -1,0 +1,9 @@
+{
+  "name": "damas",
+  "version": "0.0.1alpha",
+  "dependencies": {
+    "express": "~3.4.4",
+    "socket.io": "~0.9.16",
+    "mongoose": "~3.8.0"
+  }
+}
