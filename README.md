@@ -1,4 +1,15 @@
-tabuleiros
-==========
+Formato de jogo
 
-Jogo de damas e xadrez
+{
+	_id: 123,
+	p1: "asdasd"
+	p2: "asdasd"
+	moves: [
+		{
+			cor: p/b
+			origem: a3
+			destino: c8
+			captura:  b4
+		}
+	]
+}
