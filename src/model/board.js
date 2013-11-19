@@ -39,8 +39,9 @@ initialBoard = function(){
 
 applyMove = function(board, move){
 	var piece = find(board, move.origem);
-	if(!piece || (move.destino.charCodeAt(0) - 96 + move.destino[1])%2 != 0) {
-		//console.log("Movimento ilegal: " + JSON.stringify(move));
+	var chara = move.destino.charCodeAt(0) - 96;
+	if(!piece || (chara + parseInt(move.destino[1]))%2 != 0) {
+		console.log("Movimento ilegal: " + JSON.stringify(move));
 		return;
 	}
 	

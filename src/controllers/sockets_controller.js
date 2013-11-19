@@ -1,9 +1,7 @@
 var io = require('../setup').io;
 
-io.sockets.on('movement', function(socket){
-	io.sockets.emit('update');
-});
-
-io.sockets.on('subscribe', function(socket){
-	console.log('SUBSCRIBE >>>>>>>>>>>>>>' + socket);
+io.sockets.on('connection', function(socket){
+	socket.on('movement', function(data){
+		socket.broadcast.emit('update');
+	});
 });

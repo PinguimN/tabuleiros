@@ -36,6 +36,26 @@ drawGamea = function(aGame){
 		drawPiece(ctx, x,y, aGame[piece].cor == 'P');
 	}
 
+	
+}
+
+drawGame = function(){
+	$.getJSON("/calculateBoard/" + gameId, function(data){
+		drawGamea(data);
+	});
+}
+
+initializeGame = function(){
+	gameId = document.getElementById('gameId').value;
+	socket = io.connect();
+	socket.on('update', function(message){
+		console.log('UPDATE REQUESTED BY SERVER');
+		drawGame();
+	});
+	drawGame();
+
+	var myCanvas = document.getElementById("tabuleiro");
+
 	myCanvas.addEventListener('mousedown',function(evt){
 		var x = Math.floor(evt.offsetX / cellSize);
 		var y = -Math.floor(evt.offsetY / cellSize) + 8;
@@ -49,29 +69,9 @@ drawGamea = function(aGame){
 		var destino = String.fromCharCode(x+97)+y ;
 		$.getJSON("/"+gameId+"/" + pieceTaken +"/" + destino +"/" + cor , function(data){
 			socket.emit('movement', {gameId : gameId});
-			alert('emitted');
 			drawGame();
 		});
 	});
-}
-
-drawGame = function(){
-	$.getJSON("/calculateBoard/" + gameId, function(data){
-		drawGamea(data);
-	});
-}
-
-initializeGame = function(){
-	gameId = document.getElementById('gameId').value;
-	var socketNamespace = io.connect();
-	socket = socketNamespace.socket;
-	socket.on('update', function(message){
-		alert('received updte');
-		drawGame();
-	});
-	socket.emit('movement');
-	socketNamespace.emit('movement');
-	drawGame();
 }
 
 window.onload = initializeGame;
