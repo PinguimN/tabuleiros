@@ -1,5 +1,6 @@
 var app = require('../setup').app;
 var Game = require('../setup').Game;
+var Board = require('../model/board');
 app.get('/', function(req, res) {
   res.render('index');
 });
@@ -12,6 +13,14 @@ app.get('/newGame', function(req,res){
 
 app.get('/visualize/:id', function(req,res){
   res.render('game');
+});
+
+app.get('/calculateBoard/:id', function(req,res){
+  Game.find(req.params.id, function(err, result){
+    if(err)
+      throw err;
+    res.json(Board.calculateBoard(result[0]));
+  });
 });
 
 app.get('/:id/:origem/:destino/:cor/:captura?', function(req, res) {
