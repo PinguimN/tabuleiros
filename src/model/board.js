@@ -41,7 +41,7 @@ initialBoard = function(){
 
 applyMove = function(board, move){
 	var piece = find(board, move.origem);
-	if(piece == null) {
+	if(!piece) {
 		console.log("Movimento ilegal: " + JSON.stringify(move));
 		return;
 	}
@@ -49,6 +49,10 @@ applyMove = function(board, move){
 	piece.pos = move.destino;
 	if(move.captura){
 		var captured = find(board, move.captura);
+		if(!captured) {
+			console.log("Captura ilegal: " + JSON.stringify(move));
+			return;
+		}
 		board.splice(board.indexOf(captured),1);
 	}
 }

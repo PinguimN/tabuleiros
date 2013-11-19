@@ -1,13 +1,12 @@
 var boardSize = 500;
 var cellSize = boardSize/8;
+var gameId;
 
 drawBoard = function(ctx){
-	
 	var black = true;
 	for(x = 0; x < 9; x ++)		
 		for(y = 0; y < 9; y ++)
 			drawSquare(ctx, x, y, (black = !black));
-	
 }
 
 drawSquare = function(ctx, x, y, black){
@@ -15,7 +14,6 @@ drawSquare = function(ctx, x, y, black){
 	var xPixel = x*cellSize;
 	var yPixel = y*cellSize;
 	ctx.fillRect(xPixel,yPixel,xPixel + cellSize,yPixel + cellSize);
-
 }
 
 drawPiece = function(ctx, x,y, black){
@@ -24,7 +22,7 @@ drawPiece = function(ctx, x,y, black){
     ctx.arc(x*cellSize+cellSize/2, y*cellSize+cellSize/2, 0.8*cellSize/2, 0, 2 * Math.PI, false);
 	ctx.fill();
 }
-
+var pieceTaken = null; //TODO: dar um jeito de tirar essa global(?)
 drawGamea = function(aGame){
 	var myCanvas = document.getElementById("tabuleiro");
 	var ctx = myCanvas.getContext("2d");
@@ -35,10 +33,27 @@ drawGamea = function(aGame){
 		var y = 8 - aGame[piece].pos[1];
 		drawPiece(ctx, x,y, aGame[piece].cor == 'P');
 	}
+
+	myCanvas.addEventListener('mousedown',function(evt){
+		var x = Math.floor(evt.offsetX / cellSize);
+		var y = -Math.floor(evt.offsetY / cellSize) + 8;
+		pieceTaken = String.fromCharCode(x+97)+y;
+	});
+
+	myCanvas.addEventListener('mouseup',function(evt){
+		var x = Math.floor(evt.offsetX / cellSize);
+		var y = -Math.floor(evt.offsetY / cellSize) + 8;
+		var cor = "L";//Não está precisando da cor
+		var destino = String.fromCharCode(x+97)+y ;
+		$.getJSON("/"+gameId+"/" + pieceTaken +"/" + destino +"/" + cor , function(data){
+			drawGame();	
+		});
+	});
 }
 
 drawGame = function(){
-	$.getJSON("/calculateBoard/528b6bdc30477e18c439ed1e", function(data){
+	gameId = document.getElementById('gameId').value;
+	$.getJSON("/calculateBoard/" + gameId, function(data){
 		drawGamea(data);
 	});
 }

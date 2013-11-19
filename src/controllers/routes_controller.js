@@ -12,7 +12,7 @@ app.get('/newGame', function(req,res){
 });
 
 app.get('/visualize/:id', function(req,res){
-  res.render('game');
+  res.render('game',{gameId: req.params.id});
 });
 
 app.get('/calculateBoard/:id', function(req,res){
