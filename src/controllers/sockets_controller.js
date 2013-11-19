@@ -1,5 +1,9 @@
 var io = require('../setup').io;
 
-io.sockets.on('connection', function(socket) {
-  socket.emit('welcome', 'Bem vindo');
+io.sockets.on('movement', function(socket){
+	io.sockets.emit('update');
+});
+
+io.sockets.on('subscribe', function(socket){
+	console.log('SUBSCRIBE >>>>>>>>>>>>>>' + socket);
 });

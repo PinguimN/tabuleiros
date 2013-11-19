@@ -1,6 +1,7 @@
 var app = require('../setup').app;
 var Game = require('../setup').Game;
 var Board = require('../model/board');
+
 app.get('/', function(req, res) {
   res.render('index');
 });

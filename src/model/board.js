@@ -1,7 +1,5 @@
 exports.calculateBoard = function(game){
 	var board = initialBoard();
-	console.log(game);
-	console.log(game.moves);
 	for(i = 0; i< game.moves.length; i++){
 		var move = game.moves[i];
 		applyMove(board, move);
@@ -41,8 +39,8 @@ initialBoard = function(){
 
 applyMove = function(board, move){
 	var piece = find(board, move.origem);
-	if(!piece) {
-		console.log("Movimento ilegal: " + JSON.stringify(move));
+	if(!piece || (move.destino.charCodeAt(0) - 96 + move.destino[1])%2 != 0) {
+		//console.log("Movimento ilegal: " + JSON.stringify(move));
 		return;
 	}
 	

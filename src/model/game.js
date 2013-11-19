@@ -3,7 +3,7 @@ var mongoose = require('mongoose'),
   db = mongoose.createConnection('localhost', 'checkers');
   db.on('error', console.error.bind(console,'connection error: '));
 
-mongoose.set('debug', true);
+//mongoose.set('debug', true);
 
 var gameSchema = new mongoose.Schema({
   p1: String,
@@ -20,6 +20,10 @@ var gameSchema = new mongoose.Schema({
 var Game = db.model('Game', gameSchema);
 
 exports.find = function(id, callback){
+  if(id == 'favicon.ico'){
+    console.log("FAVICON DO KRL" + id);
+    return;
+  }
   Game.find({_id: new ObjectId(id)}, callback);
 };
 

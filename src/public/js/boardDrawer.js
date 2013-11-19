@@ -2,6 +2,8 @@ var boardSize = 500;
 var cellSize = boardSize/8;
 var gameId;
 
+var socket;
+
 drawBoard = function(ctx){
 	var black = true;
 	for(x = 0; x < 9; x ++)		
@@ -46,16 +48,30 @@ drawGamea = function(aGame){
 		var cor = "L";//Não está precisando da cor
 		var destino = String.fromCharCode(x+97)+y ;
 		$.getJSON("/"+gameId+"/" + pieceTaken +"/" + destino +"/" + cor , function(data){
-			drawGame();	
+			socket.emit('movement', {gameId : gameId});
+			alert('emitted');
+			drawGame();
 		});
 	});
 }
 
 drawGame = function(){
-	gameId = document.getElementById('gameId').value;
 	$.getJSON("/calculateBoard/" + gameId, function(data){
 		drawGamea(data);
 	});
 }
 
-window.onload = drawGame;
+initializeGame = function(){
+	gameId = document.getElementById('gameId').value;
+	var socketNamespace = io.connect();
+	socket = socketNamespace.socket;
+	socket.on('update', function(message){
+		alert('received updte');
+		drawGame();
+	});
+	socket.emit('movement');
+	socketNamespace.emit('movement');
+	drawGame();
+}
+
+window.onload = initializeGame;
