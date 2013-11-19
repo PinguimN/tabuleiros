@@ -3,8 +3,10 @@ extends layout
 block script
 
   script(type="text/javascript", src="/socket.io/socket.io.js")
-  script(type="text/javascript", src="/js/script.js")
+  //script(type="text/javascript", src="/js/script.js")
+  script(type="text/javascript", src="/js/boardDrawer.js")
 
 block body
 
   h1 tabuleiro
+  canvas(id="tabuleiro", height=500, width=500)

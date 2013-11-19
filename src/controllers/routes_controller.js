@@ -10,6 +10,10 @@ app.get('/newGame', function(req,res){
   });
 });
 
+app.get('/visualize/:id', function(req,res){
+  res.render('game');
+});
+
 app.get('/:id/:origem/:destino/:cor/:captura?', function(req, res) {
   Game.addMove(req.params.id, {"cor":req.params.cor,"origem":req.params.origem,"destino":req.params.destino}, function(err, result){
   	if(err)
