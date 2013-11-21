@@ -1,7 +1,25 @@
+var mongoose = require('mongoose');
 var io = require('../setup').io;
 
-io.sockets.on('connection', function(socket){
-	socket.on('movement', function(data){
-		socket.broadcast.emit('update');
-	});
+var Game = mongoose.model('Game');
+
+io.sockets.on('connection', function(socket) {
+
+  var game;
+
+  socket.on('init', function(gameId, callback) {
+    Game.find({_id: gameId}, function(err, gameObj) {
+      if (err) throw err;
+      game = new Game(gameObj);
+      callback(game.moves);
+    });
+  });
+
+  socket.on('move', function(move) {
+    game.addMove(move, function(allMoves) {
+      socket.emit('update', allMoves);
+      socket.broadcast.emit('update', allMoves);
+    });
+  });
+
 });

@@ -1,41 +1,20 @@
+var mongoose = require('mongoose');
+
 var app = require('../setup').app;
-var Game = require('../setup').Game;
-var Board = require('../model/board');
+
+var Game = mongoose.model('Game');
 
 app.get('/', function(req, res) {
   res.render('index');
 });
 
-app.get('/newGame', function(req,res){
-  Game.createGame('pl1', 'pl2', function(game){
+app.get('/newGame', function(req,res) {
+  new Game({p1: 'p1', p2: 'p2'}).save(function(err, game) {
+    if (err) throw err;
     res.redirect('/' + game._id);
   });
 });
 
-app.get('/visualize/:id', function(req,res){
-  res.render('game',{gameId: req.params.id});
-});
-
-app.get('/calculateBoard/:id', function(req,res){
-  Game.find(req.params.id, function(err, result){
-    if(err)
-      throw err;
-    res.json(Board.calculateBoard(result[0]));
-  });
-});
-
-app.get('/:id/:origem/:destino/:cor/:captura?', function(req, res) {
-  Game.addMove(req.params.id, {"cor":req.params.cor,"origem":req.params.origem,"destino":req.params.destino}, function(err, result){
-  	if(err)
-  		throw err;
-    res.redirect('/' + req.params.id);
-  });
-});
-
-app.get('/:id', function(req, res) {
-  Game.find(req.params.id, function(err, result){
-  	if(err)
-  		throw err;
-	res.json(result);
-  });
+app.get('/:gameId', function(req, res) {
+  res.render('game', {gameId: req.params.gameId});
 });
