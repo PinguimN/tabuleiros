@@ -1,8 +1,9 @@
 var mongoose = require('mongoose');
-
 var app = require('../setup').app;
-
 var Game = mongoose.model('Game');
+var ObjectId = mongoose.Types.ObjectId;
+
+app.get('/favicon.ico');
 
 app.get('/', function(req, res) {
   res.render('index');
@@ -16,5 +17,7 @@ app.get('/newGame', function(req,res) {
 });
 
 app.get('/:gameId', function(req, res) {
-  res.render('game', {gameId: req.params.gameId});
+  Game.findOne({_id: new ObjectId(req.params.gameId)}, function(err, game){
+  	res.render('game', {gameId: game._id, p1: game.p1, p2: game.p2});
+  });
 });

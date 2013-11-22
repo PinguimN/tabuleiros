@@ -8,7 +8,7 @@ io.sockets.on('connection', function(socket) {
   var game;
 
   socket.on('init', function(gameId, callback) {
-    Game.find({_id: gameId}, function(err, gameObj) {
+    Game.findOne({_id: gameId}, function(err, gameObj) {
       if (err) throw err;
       game = new Game(gameObj);
       callback(game.moves);

@@ -18,8 +18,7 @@ gameSchema.methods.addMove = function(move, callback) {
   console.log('addMove' + this);
   this.moves.push(move);
   this.save(function(err) {
-    // if (err) throw err;
-    console.log('callbak do addMove ' + self.moves);
+    if (err) throw err;
     callback(self.moves);
   });
 };

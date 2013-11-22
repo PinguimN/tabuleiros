@@ -42,7 +42,7 @@ var Board = function() {
     },
 
     applyMove: function(board, move) {
-      var piece = find(board, move.from);
+      var piece = this.find(board, move.from);
       var chara = move.to.charCodeAt(0) - 96;
       if (!piece || (chara + parseInt(move.to[1])) % 2 != 0) {
         console.log("Movimento ilegal: " + JSON.stringify(move));
@@ -51,7 +51,7 @@ var Board = function() {
       
       piece.pos = move.to;
       if (move.capture) {
-        var captured = find(board, move.capture);
+        var captured = this.find(board, move.capture);
         if (!captured) {
           console.log("captura ilegal: " + JSON.stringify(move));
           return;
