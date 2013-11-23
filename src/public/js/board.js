@@ -1,13 +1,16 @@
-var Board = function() {
+Board = function() {
+  
+  var newBoard = {
+    
+    currentBoard: function(){
+      return board;
+    },
 
-  return {
-
-    calculate: function(moves) {
-      var board = this.initialize();
+    initializeWith: function(moves) {
       moves = moves || [];
       for (i = 0; i < moves.length; i++) {
         var move = moves[i];
-        this.applyMove(board, move);
+        this.applyMove(move);
       }
       return board;
     },
@@ -41,12 +44,14 @@ var Board = function() {
       ];
     },
 
-    applyMove: function(board, move) {
+    applyMove: function(move) {
+      if(!move)
+        return board;
       var piece = this.find(board, move.from);
       var chara = move.to.charCodeAt(0) - 96;
       if (!piece || (chara + parseInt(move.to[1])) % 2 != 0) {
         console.log("Movimento ilegal: " + JSON.stringify(move));
-        return;
+        return board;
       }
       
       piece.pos = move.to;
@@ -54,10 +59,11 @@ var Board = function() {
         var captured = this.find(board, move.capture);
         if (!captured) {
           console.log("captura ilegal: " + JSON.stringify(move));
-          return;
+          return board;
         }
         board.splice(board.indexOf(captured),1);
       }
+      return board;
     },
 
     find: function(board, position) {
@@ -68,8 +74,18 @@ var Board = function() {
         }
       }
       return null;
+    },
+
+    emit: function(event, msg) {
+      if(event == 'move')
+        this.applyMove(msg);
     }
 
+
   };
+
+  var board = newBoard.initialize();
+
+  return newBoard;
 
 }

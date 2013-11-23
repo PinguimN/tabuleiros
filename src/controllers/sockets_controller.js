@@ -17,8 +17,7 @@ io.sockets.on('connection', function(socket) {
 
   socket.on('move', function(move) {
     game.addMove(move, function(allMoves) {
-      socket.emit('update', allMoves);
-      socket.broadcast.emit('update', allMoves);
+      socket.broadcast.emit('update', move);
     });
   });
 
