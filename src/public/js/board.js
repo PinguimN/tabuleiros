@@ -47,16 +47,15 @@ Board = function() {
     applyMove: function(move) {
       if(!move)
         return board;
-      var piece = this.find(board, move.from);
-      var chara = move.to.charCodeAt(0) - 96;
-      if (!piece || (chara + parseInt(move.to[1])) % 2 != 0) {
+      var piece = this.find(move.from);
+      if (!piece || !this.isValidMove(move)) {
         console.log("Movimento ilegal: " + JSON.stringify(move));
         return board;
       }
       
       piece.pos = move.to;
       if (move.capture) {
-        var captured = this.find(board, move.capture);
+        var captured = this.find(move.capture);
         if (!captured) {
           console.log("captura ilegal: " + JSON.stringify(move));
           return board;
@@ -66,7 +65,7 @@ Board = function() {
       return board;
     },
 
-    find: function(board, position) {
+    find: function(position) {
       for (pieceIndex in board) {
         var piece = board[pieceIndex];
         if (piece.pos == position) {
@@ -79,6 +78,14 @@ Board = function() {
     emit: function(event, msg) {
       if(event == 'move')
         this.applyMove(msg);
+    },
+
+    isValidMove: function(move){
+      var chara = move.to.charCodeAt(0) - 96;
+      var whiteSquare = (chara + parseInt(move.to[1])) % 2 != 0;
+      var hasPieceOnDestination = this.find(move.to);
+      console.log(!whiteSquare + ' && ' + !hasPieceOnDestination + ' piece: ' + hasPieceOnDestination);
+      return !whiteSquare && !hasPieceOnDestination;
     }
 
 
@@ -89,3 +96,6 @@ Board = function() {
   return newBoard;
 
 }
+//pra fazer o js client-side testável
+if(module !== 'undefined')
+  module.exports = Board;
