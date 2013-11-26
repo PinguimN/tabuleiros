@@ -55,15 +55,25 @@ describe('Board', function(){
       var boardAfterIllegalMove = new Board().applyMove({from:'a1' ,to:'b2'});
       assert.board(boardBeforeIllegalMove, boardAfterIllegalMove);
     });
-    it('should ignore moves to black squares', function(){
-      var boardBeforeIllegalMove = new Board().currentBoard();
-      var boardAfterIllegalMove = new Board().applyMove({from:'a1' ,to:'a2'});
-      assert.board(boardBeforeIllegalMove, boardAfterIllegalMove);
-    });
-    it('should ignore moves to out of range squares', function(){
-      var boardBeforeIllegalMove = new Board().currentBoard();
-      var boardAfterIllegalMove = new Board().applyMove({from:'a1' ,to:'a5'});
-      assert.board(boardBeforeIllegalMove, boardAfterIllegalMove);
-    });
   })
+});
+
+describe('Piece', function(){
+  describe('#isValidMove', function(){
+    it('should refuse long moves', function(){
+      assert.equal(false, new Piece().isValidMove({from: 'a1', to: 'a5'}));
+    });
+    it('should refuse horizontal moves', function(){
+      assert.equal(false, new Piece().isValidMove({from: 'a1', to: 'a2'}));
+    });
+    it('should refuse vertical moves', function(){
+      assert.equal(false, new Piece().isValidMove({from: 'a1', to: 'b1'}));
+    });
+    it('should accept normal moves', function(){
+      assert.equal(true, new Piece('W').isValidMove({from: 'a1', to: 'b2'}));
+    });
+    it('should refuse backward moves', function(){
+      assert.equal(false, new Piece('B').isValidMove({from: 'a1', to: 'b2'}));
+    });
+  });
 });

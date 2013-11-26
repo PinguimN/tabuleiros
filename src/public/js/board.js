@@ -49,7 +49,7 @@ Board = function() {
         return board;
       var piece = this.find(move.from);
       if (!piece || !this.isValidMove(move)) {
-        console.log("Movimento ilegal: " + JSON.stringify(move));
+        //console.log("Movimento ilegal: " + JSON.stringify(move));
         return board;
       }
       
@@ -81,21 +81,26 @@ Board = function() {
     },
 
     isValidMove: function(move){
-      var chara = move.to.charCodeAt(0) - 96;
-      var whiteSquare = (chara + parseInt(move.to[1])) % 2 != 0;
       var hasPieceOnDestination = this.find(move.to);
-      console.log(!whiteSquare + ' && ' + !hasPieceOnDestination + ' piece: ' + hasPieceOnDestination);
-      return !whiteSquare && !hasPieceOnDestination;
+      return !hasPieceOnDestination && new Piece().isValidMove(move);
     }
-
-
   };
 
   var board = newBoard.initialize();
 
   return newBoard;
 
-}
+};
+
+Piece = function(color){
+  return  { isValidMove: function(move){
+      var difX = move.to.charCodeAt(0) - move.from.charCodeAt(0);
+      var difY = move.to[1] - move.from[1] * (color == 'B' ? -1 : 1);
+      return Math.abs(difX) == 1 && difY == 1;
+    }
+  };
+};
+
 //pra fazer o js client-side testável
 if(module !== 'undefined')
   module.exports = Board;
