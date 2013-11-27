@@ -43,7 +43,7 @@ var Renderer = function(canvas, board, listeners) {
     for (piece in currentBoard) {
       var x = currentBoard[piece].pos[0].charCodeAt(0) - 97;//char intValue
       var y = 8 - currentBoard[piece].pos[1];
-      drawPiece(x, y, currentBoard[piece].cor == 'P');
+      drawPiece(x, y, currentBoard[piece].color == 'B');
     }
   };
 
