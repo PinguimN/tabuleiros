@@ -1,3 +1,5 @@
+var Piece = require('./piece').Piece;
+
 Board = function() {
   
   var newBoard = {
@@ -50,7 +52,7 @@ Board = function() {
       var piece = this.find(move.from);
       this.detectCapture(move);
       if (!piece || !this.isValidMove(piece, move)) {
-        //console.log("Movimento ilegal: " + JSON.stringify(move));
+        console.log("Movimento ilegal: " + JSON.stringify(move));
         return board;
       }
       
@@ -100,30 +102,6 @@ Board = function() {
 
   return newBoard;
 
-};
-
-Piece = function(color){ //TODO: Refactor ffs
-  return  { 
-    isValidMove: function(move){
-      if(move.capture)
-        return this.isValidCapture(move);
-      var difX = move.to.charCodeAt(0) - move.from.charCodeAt(0);
-      var difY = (move.to[1] - move.from[1]) * (color == 'B' ? -1 : 1);
-      return Math.abs(difX) == 1 && difY == 1;
-    },
-    isValidCapture: function(move){
-      var difX = move.to.charCodeAt(0) - move.from.charCodeAt(0);
-      var difY = (move.to[1] - move.from[1]);
-      return this.isValidCaptee(move) && Math.abs(difX) == 2 && Math.abs(difY) == 2;
-    },
-    isValidCaptee: function(move){
-      var difX = move.from.charCodeAt(0) - move.capture.charCodeAt(0);
-      var difY = (move.from[1] - move.capture[1]);
-      var difX2 = move.to.charCodeAt(0) - move.capture.charCodeAt(0);
-      var difY2 = (move.to[1] - move.capture[1]);
-      return Math.abs(difX) == 1 && Math.abs(difY) == 1 && Math.abs(difX2) == 1 && Math.abs(difY2) == 1;
-    }
-  };
 };
 
 //pra fazer o js client-side testável
