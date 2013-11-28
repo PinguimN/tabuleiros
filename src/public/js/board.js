@@ -1,7 +1,7 @@
 if(typeof Piece == 'undefined')
   Piece = require('./piece').Piece;
 
-Board = function() {
+Board = function(currentState) {
   
   var newBoard = {
     
@@ -58,6 +58,10 @@ Board = function() {
       }
       
       piece.pos = move.to;
+      if(this.isCrowning(piece)){
+        piece.isKing = true;
+      }
+
       if (move.capture) {
         var capture = this.find(move.capture);
         if (!capture) {
@@ -80,14 +84,25 @@ Board = function() {
     },
 
     detectCapture: function(move){ //Altera o move... ok?
-      var difX = move.to.charCodeAt(0) - move.from.charCodeAt(0);
-      var difY = move.to[1] - move.from[1];
-      if(Math.abs(difX) != 2 || Math.abs(difY) != 2)
-        return;
-      var captured = String.fromCharCode(move.to.charCodeAt(0) - difX / 2) + (parseInt(move.from[1]) + difY / 2);
-      move.capture = captured;
+      var piecesInPath = [];
+      var diffX = Math.abs(move.to[1] - move.from[1]);
+      var signalY = diffX / (move.to[1] - move.from[1]);
+      var signalX = Math.abs(move.to.charCodeAt(0) - move.from.charCodeAt(0)) / (move.to.charCodeAt(0) - move.from.charCodeAt(0));
+      for(var i = 1; i < diffX; i++){
+        x = move.from.charCodeAt(0) + i * signalX;
+        y = parseInt(move.from[1]) + i * signalY;
+        var piece = this.find(String.fromCharCode(x) + y);
+        if(piece)
+          piecesInPath.push(piece);
+      }
+      if(piecesInPath.length == 1)
+        move.capture = piecesInPath[0].pos;
+      else if(piecesInPath.length > 1)
+        move.capture = 'ILLEGAL';
     },
-
+    isCrowning: function(piece){
+      return piece.color == 'B' ? piece.pos[1] == 1 : piece.pos[1] == 8;
+    },
     emit: function(event, msg) {
       if(event == 'move')
         this.applyMove(msg);
@@ -95,12 +110,13 @@ Board = function() {
 
     isValidMove: function(piece, move){
       var hasPieceOnDestination = this.find(move.to);
-      return !hasPieceOnDestination && new Piece(piece.color).isValidMove(move);
+      var pieceLogic = piece.isKing ? new King(piece.color) : new Piece(piece.color);
+      return !hasPieceOnDestination && pieceLogic.isValidMove(move);
     }
   };
 
-  var board = newBoard.initialize();
-
+  var board = currentState || newBoard.initialize();
+  
   return newBoard;
 
 };
