@@ -1,4 +1,5 @@
-var Piece = require('./piece').Piece;
+if(typeof Piece == 'undefined')
+  Piece = require('./piece').Piece;
 
 Board = function() {
   
@@ -105,5 +106,5 @@ Board = function() {
 };
 
 //pra fazer o js client-side testável
-if(module !== 'undefined')
+if(typeof module !== 'undefined')
   module.exports = Board;
