@@ -29,9 +29,22 @@ var Renderer = function(canvas, board, listeners) {
 
   var drawPiece = function(x, y, black) {
     context.fillStyle = black? '#000' : '#AAA';
+    context.strokeStyle = black? '#FFF' : '#000';
     context.beginPath();
     context.arc(x * cellSize + cellSize / 2, y * cellSize + cellSize / 2, 0.8 * cellSize/2, 0, 2 * Math.PI, false);
     context.fill();
+    context.stroke();
+    context.closePath();
+  };
+
+  var drawKing = function(x, y, black) {
+    context.fillStyle = black? '#000' : '#AAA';
+    context.strokeStyle = black? '#FFF' : '#000';
+    context.beginPath();
+    context.arc(x * cellSize + cellSize / 2, y * cellSize + cellSize / 2 - cellSize / 10, 0.8 * cellSize/2, 0, 2 * Math.PI, false);
+    context.fill();
+    context.stroke();
+    context.closePath();
   };
 
   var drawGame = function() {
@@ -44,6 +57,8 @@ var Renderer = function(canvas, board, listeners) {
       var x = currentBoard[piece].pos[0].charCodeAt(0) - 97;//char intValue
       var y = 8 - currentBoard[piece].pos[1];
       drawPiece(x, y, currentBoard[piece].color == 'B');
+      if(currentBoard[piece].isKing)
+        drawKing(x,y,currentBoard[piece].color == 'B');
     }
   };
 
