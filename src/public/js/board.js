@@ -9,6 +9,10 @@ Board = function(currentState) {
       return board;
     },
 
+    currentPlayer: function(){
+      return currentPlayerIsWhite ? 'W' : 'B';
+    },
+
     initializeWith: function(moves) {
       moves = moves || [];
       for (i = 0; i < moves.length; i++) {
@@ -53,7 +57,7 @@ Board = function(currentState) {
       var piece = this.find(move.from);
       this.detectCapture(move);
       if (!piece || !this.isValidMove(piece, move)) {
-        console.log("Movimento ilegal: " + JSON.stringify(move));
+        //console.log("Movimento ilegal: " + JSON.stringify(move));
         return board;
       }
       
@@ -65,11 +69,12 @@ Board = function(currentState) {
       if (move.capture) {
         var capture = this.find(move.capture);
         if (!capture) {
-          console.log("captura ilegal: " + JSON.stringify(move));
+          //console.log("captura ilegal: " + JSON.stringify(move));
           return board;
         }
         board.splice(board.indexOf(capture),1);
       }
+      currentPlayerIsWhite = !currentPlayerIsWhite;
       return board;
     },
 
@@ -110,13 +115,14 @@ Board = function(currentState) {
 
     isValidMove: function(piece, move){
       var hasPieceOnDestination = this.find(move.to);
+      var isPlayerTurn = this.currentPlayer() == piece.color;
       var pieceLogic = piece.isKing ? new King(piece.color) : new Piece(piece.color);
-      return !hasPieceOnDestination && pieceLogic.isValidMove(move);
+      return isPlayerTurn && !hasPieceOnDestination && pieceLogic.isValidMove(move);
     }
   };
 
   var board = currentState || newBoard.initialize();
-  
+  var currentPlayerIsWhite = true;
   return newBoard;
 
 };

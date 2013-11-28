@@ -64,28 +64,49 @@ describe('Board', function(){
       board.applyMove({from:'c7', to:'d8'});
       assert.ok(JSON.stringify(board.currentBoard()).indexOf('isKing') > 0);
     });
-    it('should calculate long captures', function(){
+    it('should calculate long captures b2->f6', function(){
       var board = new Board([{color: 'W', pos: 'b2', isKing: true},{color: 'B', pos: 'e5'}]);
       assert.ok(JSON.stringify(board.currentBoard()).indexOf('"color":"B"') > 0);
       board.applyMove({from:'b2', to:'f6'});
       assert.ok(JSON.stringify(board.currentBoard()).indexOf('"color":"B"') < 0);
-
-      var board = new Board([{color: 'W', pos: 'b2'},{color: 'B', pos: 'f6', isKing: true}]);
-      assert.ok(JSON.stringify(board.currentBoard()).indexOf('"color":"W"') > 0);
+    });
+    it('should calculate long captures f6->a1', function(){
+      var board = new Board([{color: 'B', pos: 'b2'},{color: 'W', pos: 'f6', isKing: true}]);
+      assert.ok(JSON.stringify(board.currentBoard()).indexOf('"color":"B"') > 0);
       board.applyMove({from:'f6', to:'a1'});
-      assert.ok(JSON.stringify(board.currentBoard()).indexOf('"color":"W"') < 0);
-    
+      assert.ok(JSON.stringify(board.currentBoard()).indexOf('"color":"B"') < 0);
+    });
+    it('should calculate long captures c7->g3', function(){
       var board = new Board([{color: 'W', pos: 'c7', isKing: true},{color: 'B', pos: 'f4'}]);
       assert.ok(JSON.stringify(board.currentBoard()).indexOf('"color":"B"') > 0);
       board.applyMove({from:'c7', to:'g3'});
       assert.ok(JSON.stringify(board.currentBoard()).indexOf('"color":"B"') < 0);
-
     });
-     it('should not allow multiple captures in one move', function(){
+    it('should not allow multiple captures in one move', function(){
       var board = new Board([{color: 'W', pos: 'b2', isKing: true},{color: 'B', pos: 'e5'},{color: 'B', pos: 'd4'}]);
       var before = JSON.stringify(board.currentBoard());
       board.applyMove({from:'b2', to:'f6'});
       assert.equal(before, JSON.stringify(board.currentBoard()));
+    });
+  })
+});
+
+describe('Board', function(){
+  describe('player turn control', function(){
+    it('should open with white', function(){
+      var board = new Board();
+      assert.equal('W', board.currentPlayer());
+    });
+    it('should second with black', function(){
+      var board = new Board();
+      board.applyMove({from: 'a3', to: 'b4'});
+      assert.equal('B', board.currentPlayer());
+    });
+    it('should ignore moves from wrong player', function(){
+      var board = new Board();
+      board.applyMove({from: 'b6', to: 'c5'});
+      assert.equal('W', board.currentPlayer());
+      assert.board(new Board().currentBoard(), board.currentBoard());
     });
   })
 });
