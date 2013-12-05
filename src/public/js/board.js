@@ -57,7 +57,7 @@ Board = function(currentState) {
       var piece = this.find(move.from);
       this.detectCapture(move);
       if (!piece || !this.isValidMove(piece, move)) {
-        //console.log("Movimento ilegal: " + JSON.stringify(move));
+        console.log('Movimento ilegal!');
         return board;
       }
       
@@ -69,7 +69,7 @@ Board = function(currentState) {
       if (move.capture) {
         var capture = this.find(move.capture);
         if (!capture) {
-          //console.log("captura ilegal: " + JSON.stringify(move));
+          console.log('Captura ilegal!');
           return board;
         }
         board.splice(board.indexOf(capture),1);

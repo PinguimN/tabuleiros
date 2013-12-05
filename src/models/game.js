@@ -2,8 +2,8 @@ var mongoose = require('mongoose')
 var ObjectId = require('mongoose').Types.ObjectId;
 
 var gameSchema = new mongoose.Schema({
-  p1: {type: String, required: true},
-  p2: {type: String, required: true},
+  p1: {type: String},
+  p2: {type: String},
   moves: [{
     _id: false,
     color: {type: String, required: true, default: 'X'},

@@ -1,4 +1,4 @@
-var Renderer = function(canvas, board, listeners) {
+var Renderer = function(canvas, board, listener) {
   var allListeners =Array.prototype.slice.call(arguments).splice(2);
 
   var context = canvas.getContext('2d');
@@ -13,11 +13,12 @@ var Renderer = function(canvas, board, listeners) {
   canvas.addEventListener('mouseup', function(evt) {
     var x = Math.floor(evt.offsetX / cellSize);
     var y = -Math.floor(evt.offsetY / cellSize) + 8;
-    var destino = String.fromCharCode(x + 97) + y ;    
-    allListeners.forEach(function(listen){
-      listen.emit('move', {from: pieceTaken, to: destino});
+    var destino = String.fromCharCode(x + 97) + y;    
+    listener.emit('move', {
+      from: pieceTaken,
+      to: destino,
+      color: board.find(pieceTaken).color
     });
-    drawGame();
   });
 
   var drawSquare = function(x, y, black) {

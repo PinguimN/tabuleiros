@@ -13,16 +13,22 @@ var renderer = new Renderer(
   board
 );
 
-socket.emit('init', gameId, function updateBoard(moves) {
-  board.initializeWith(moves);
+socket.emit('init', gameId, prompt('Qual seu nome?'));
+
+socket.on('start', function(game) {
+  $('#players').html(game.p1 + ' X ' + game.p2);
+  board.initializeWith(game.moves);
   renderer.drawGame();
-  var moveString = "";
-  for(i in moves)//tem como sobrescrever o tostring dos move?
-  	moveString += '[' + moves[i].from + ',' + moves[i].to + ']';
-  document.getElementById('movesP').innerHTML = moveString;
 });
+
+socket.on('spectators', function(spectators) {
+  $('#spectators').html('');
+  spectators.forEach(function(spectator) {
+    $('#spectators').append('<li>' + spectator + '</li>');
+  });
+});
+
 socket.on('update', function updateBoard(move) {
   board.applyMove(move);
   renderer.drawGame();
-  document.getElementById('movesP').innerHTML += '[' + move.from + ',' + move.to + ']';
 });
